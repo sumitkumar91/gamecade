@@ -53,12 +53,3 @@ lib/
   words.ts              # Wordle answer list + valid guesses
   wordhunt-dict.ts      # 55k-word dictionary for Word Hunt
 ```
-
-## Getting Started
-
-```bash
-npm install
-npm run dev
-npm run build   # production build
-npm run start   # serve production build
-```
