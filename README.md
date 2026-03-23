@@ -1,5 +1,7 @@
 # Gamecade
 
+**Live:** [gamecade.vercel.app](https://gamecade.vercel.app)
+
 A collection of browser-based mini games built with Next.js, TypeScript, and Tailwind CSS.
 
 ## Games
@@ -57,11 +59,6 @@ lib/
 ```bash
 npm install
 npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000).
-
-```bash
 npm run build   # production build
 npm run start   # serve production build
 ```
