@@ -7,7 +7,7 @@ import "./globals.css";
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
 
 export const metadata: Metadata = {
-  title: "Arcade",
+  title: "Gamecade",
   description: "A collection of fun mini games",
 };
 
@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             href="/"
             className="text-lg font-bold tracking-tight text-zinc-50 hover:text-zinc-300 transition-colors"
           >
-            Arcade
+            Gamecade
           </Link>
         </header>
         <main className="flex-1 flex flex-col">{children}</main>

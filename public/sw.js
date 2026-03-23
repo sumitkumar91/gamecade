@@ -1,4 +1,4 @@
-const CACHE = "arcade-v1";
+const CACHE = "gamecade-v1";
 
 // Cache all navigation requests and static assets on install
 self.addEventListener("install", (event) => {

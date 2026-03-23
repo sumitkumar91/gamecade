@@ -1,4 +1,4 @@
-# Arcade
+# Gamecade
 
 A collection of browser-based mini games built with Next.js, TypeScript, and Tailwind CSS.
 

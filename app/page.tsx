@@ -25,7 +25,7 @@ export default function Home() {
   return (
     <div className="flex flex-col flex-1 px-6 py-12 max-w-3xl mx-auto w-full">
       <div className="mb-10">
-        <h1 className="text-4xl font-bold tracking-tight text-zinc-50 mb-2">Arcade</h1>
+        <h1 className="text-4xl font-bold tracking-tight text-zinc-50 mb-2">Gamecade</h1>
         <p className="text-zinc-400">Pick a game and start playing.</p>
       </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

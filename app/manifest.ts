@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Arcade",
-    short_name: "Arcade",
+    name: "Gamecade",
+    short_name: "Gamecade",
     description: "A collection of fun mini games — Word Hunt, Wordle, Tic Tac Toe",
     start_url: "/",
     display: "standalone",
