@@ -101,9 +101,29 @@ export default function WordHuntGame() {
     setDragging(false);
   }, [path, grid, trie, foundWords]);
 
+  const draggingRef = useRef(false);
+  const pathRef = useRef<Cell[]>([]);
+
+  const enterCell = useCallback(
+    (r: number, c: number) => {
+      if (!draggingRef.current || gameState !== "playing") return;
+      const current = pathRef.current;
+      const last = current[current.length - 1];
+      const cell = { r, c };
+      if (current.some((p) => p.r === r && p.c === c)) return;
+      if (!isAdjacent(last, cell)) return;
+      const next = [...current, cell];
+      pathRef.current = next;
+      setPath(next);
+    },
+    [gameState]
+  );
+
   const handlePointerDown = useCallback(
     (r: number, c: number) => {
       if (gameState !== "playing") return;
+      draggingRef.current = true;
+      pathRef.current = [{ r, c }];
       setDragging(true);
       setPath([{ r, c }]);
     },
@@ -111,25 +131,32 @@ export default function WordHuntGame() {
   );
 
   const handlePointerEnter = useCallback(
-    (r: number, c: number) => {
-      if (!dragging || gameState !== "playing") return;
-      const last = path[path.length - 1];
-      const cell = { r, c };
+    (r: number, c: number) => enterCell(r, c),
+    [enterCell]
+  );
 
-      // Can't revisit a cell
-      if (path.some((p) => p.r === r && p.c === c)) return;
-      // Must be adjacent to last cell
-      if (!isAdjacent(last, cell)) return;
-
-      setPath((p) => [...p, cell]);
+  // On mobile, pointerenter doesn't fire on elements under the finger —
+  // use pointermove + elementFromPoint on the grid container instead.
+  const gridRef = useRef<HTMLDivElement>(null);
+  const handleGridPointerMove = useCallback(
+    (e: React.PointerEvent) => {
+      if (!draggingRef.current || gameState !== "playing") return;
+      const el = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement | null;
+      if (!el) return;
+      const r = el.dataset.row;
+      const c = el.dataset.col;
+      if (r !== undefined && c !== undefined) {
+        enterCell(Number(r), Number(c));
+      }
     },
-    [dragging, gameState, path]
+    [gameState, enterCell]
   );
 
   const handlePointerUp = useCallback(() => {
-    if (!dragging) return;
+    if (!draggingRef.current) return;
+    draggingRef.current = false;
     submitPath();
-  }, [dragging, submitPath]);
+  }, [submitPath]);
 
   // Global pointer up to catch releases outside grid
   useEffect(() => {
@@ -186,8 +213,16 @@ export default function WordHuntGame() {
 
       {/* Grid */}
       <div
-        className="grid grid-cols-4 gap-2 select-none"
-        onPointerLeave={() => { if (dragging) submitPath(); }}
+        ref={gridRef}
+        className="grid grid-cols-4 gap-2 select-none touch-none"
+        onPointerMove={handleGridPointerMove}
+        onPointerLeave={() => { if (draggingRef.current) { draggingRef.current = false; submitPath(); } }}
+        onPointerDown={(e) => {
+          const el = e.target as HTMLElement;
+          const r = el.dataset.row;
+          const c = el.dataset.col;
+          if (r !== undefined && c !== undefined) handlePointerDown(Number(r), Number(c));
+        }}
       >
         {grid.map((row, r) =>
           row.map((letter, c) => {
@@ -199,6 +234,8 @@ export default function WordHuntGame() {
             return (
               <button
                 key={key}
+                data-row={r}
+                data-col={c}
                 onPointerDown={() => handlePointerDown(r, c)}
                 onPointerEnter={() => handlePointerEnter(r, c)}
                 className={`flex items-center justify-center w-16 h-16 rounded-xl text-xl font-bold uppercase
@@ -208,7 +245,7 @@ export default function WordHuntGame() {
                       ? "bg-violet-500 text-white scale-110 shadow-lg shadow-violet-500/30"
                       : "bg-violet-700 text-white scale-105"
                     : gameState === "playing"
-                    ? "bg-zinc-800 hover:bg-zinc-700 text-zinc-50 cursor-pointer"
+                    ? "bg-zinc-800 text-zinc-50"
                     : "bg-zinc-800 text-zinc-50"
                   }`}
                 disabled={gameState !== "playing"}
