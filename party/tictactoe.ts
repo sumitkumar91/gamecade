@@ -98,7 +98,7 @@ export default class TicTacToeServer implements Party.Server {
 
     if (msg.type === "reset") {
       const scores = this.state.scores;
-      const players = this.state.players;
+      const players = [...this.state.players].reverse(); // swap X and O each round
       this.state = { ...initialState(), scores, players };
       this.room.broadcast(JSON.stringify({ type: "state", state: this.state }));
     }
