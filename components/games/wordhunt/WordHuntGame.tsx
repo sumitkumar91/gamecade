@@ -10,6 +10,7 @@ import {
   TrieNode,
 } from "./wordhunt";
 import { WORD_HUNT_DICT } from "@/lib/wordhunt-dict";
+import WordHuntOnline from "./WordHuntOnline";
 
 const GAME_DURATION = 60;
 
@@ -34,6 +35,43 @@ interface Cell {
 }
 
 export default function WordHuntGame() {
+  const [mode, setMode] = useState<"solo" | "online" | null>(null);
+
+  if (mode === null) {
+    return (
+      <div className="flex flex-col items-center justify-center flex-1 gap-6 px-4">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold mb-2">Word Hunt</h1>
+          <p className="text-zinc-400">Choose your mode</p>
+        </div>
+        <div className="flex flex-col gap-3 w-full max-w-xs">
+          <button
+            onClick={() => setMode("solo")}
+            className="px-6 py-4 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-semibold text-lg transition-colors"
+          >
+            Solo
+            <span className="block text-sm font-normal text-violet-200 mt-0.5">60 seconds, beat your best</span>
+          </button>
+          <button
+            onClick={() => setMode("online")}
+            className="px-6 py-4 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-semibold text-lg transition-colors border border-emerald-600"
+          >
+            Play Online
+            <span className="block text-sm font-normal text-emerald-200 mt-0.5">Same grid, real-time vs opponent</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (mode === "online") {
+    return <WordHuntOnline onBack={() => setMode(null)} />;
+  }
+
+  return <WordHuntSolo onBack={() => setMode(null)} />;
+}
+
+function WordHuntSolo({ onBack }: { onBack: () => void }) {
   const [grid, setGrid] = useState<string[][]>(() => generateGrid());
   const [trie] = useState<TrieNode>(() => buildTrie(WORD_HUNT_DICT));
   const [gameState, setGameState] = useState<"idle" | "playing" | "ended">("idle");
