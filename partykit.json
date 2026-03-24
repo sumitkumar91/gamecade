@@ -1,0 +1,6 @@
+{
+  "$schema": "https://www.partykit.io/schema.json",
+  "name": "gamecade",
+  "main": "party/tictactoe.ts",
+  "compatibilityDate": "2023-02-16"
+}

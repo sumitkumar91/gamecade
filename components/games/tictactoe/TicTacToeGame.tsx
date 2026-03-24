@@ -2,8 +2,9 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Board, Cell, checkWinner, getBestMove } from "./minimax";
+import TicTacToeOnline from "./TicTacToeOnline";
 
-type Mode = "ai" | "2player" | null;
+type Mode = "ai" | "2player" | "online" | null;
 
 interface Scores {
   X: number;
@@ -154,9 +155,20 @@ export default function TicTacToeGame() {
             2 Players
             <span className="block text-sm font-normal text-zinc-400 mt-0.5">Pass &amp; play locally</span>
           </button>
+          <button
+            onClick={() => setMode("online")}
+            className="px-6 py-4 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-semibold text-lg transition-colors border border-emerald-600"
+          >
+            Play Online
+            <span className="block text-sm font-normal text-emerald-200 mt-0.5">Real-time multiplayer</span>
+          </button>
         </div>
       </div>
     );
+  }
+
+  if (mode === "online") {
+    return <TicTacToeOnline onBack={() => setMode(null)} />;
   }
 
   const xLabel = mode === "ai" ? "You" : "Player X";
