@@ -33,7 +33,6 @@ export default function TicTacToeOnline({ onBack }: { onBack: () => void }) {
   const socket = usePartySocket({
     host: HOST,
     room: roomId ?? "__lobby__",
-    party: "tictactoe",
     onOpen(e) {
       // @ts-ignore
       connIdRef.current = e.target?.id ?? null;
