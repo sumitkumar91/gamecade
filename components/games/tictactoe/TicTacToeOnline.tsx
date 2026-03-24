@@ -18,7 +18,7 @@ interface GameState {
 const HOST = "gamecade.sumitkumar91.partykit.dev";
 
 function generateRoomId() {
-  return Math.random().toString(36).slice(2, 8).toUpperCase();
+  return "TTT-" + Math.random().toString(36).slice(2, 7).toUpperCase();
 }
 
 export default function TicTacToeOnline({ onBack }: { onBack: () => void }) {
@@ -74,7 +74,8 @@ export default function TicTacToeOnline({ onBack }: { onBack: () => void }) {
 
   function joinRoom() {
     if (!inputRoom.trim()) return;
-    setRoomId(inputRoom.trim().toUpperCase());
+    const raw = inputRoom.trim().toUpperCase();
+    setRoomId(raw.startsWith("TTT-") ? raw : "TTT-" + raw);
     setJoined(true);
   }
 

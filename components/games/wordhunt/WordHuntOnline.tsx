@@ -5,7 +5,7 @@ import usePartySocket from "partysocket/react";
 import { buildTrie, isAdjacent, isValidWord, scoreWord, TrieNode } from "./wordhunt";
 import { WORD_HUNT_DICT } from "@/lib/wordhunt-dict";
 
-const HOST = "gamecade-wordhunt.sumitkumar91.partykit.dev";
+const HOST = "gamecade.sumitkumar91.partykit.dev";
 const GAME_DURATION = 60;
 
 interface Cell { r: number; c: number; }
@@ -18,7 +18,7 @@ interface GameState {
 }
 
 function generateRoomId() {
-  return Math.random().toString(36).slice(2, 8).toUpperCase();
+  return "WH-" + Math.random().toString(36).slice(2, 7).toUpperCase();
 }
 
 export default function WordHuntOnline({ onBack }: { onBack: () => void }) {
@@ -161,7 +161,8 @@ export default function WordHuntOnline({ onBack }: { onBack: () => void }) {
 
   function joinRoom() {
     if (!inputRoom.trim()) return;
-    setRoomId(inputRoom.trim().toUpperCase());
+    const raw = inputRoom.trim().toUpperCase();
+    setRoomId(raw.startsWith("WH-") ? raw : "WH-" + raw);
     setJoined(true);
   }
 
