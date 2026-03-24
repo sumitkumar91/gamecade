@@ -15,10 +15,7 @@ interface GameState {
   scores: { X: number; O: number; draws: number };
 }
 
-const HOST =
-  process.env.NODE_ENV === "development"
-    ? "localhost:1999"
-    : "gamecade.USERNAME.partykit.dev"; // replace USERNAME after deploy
+const HOST = "gamecade.sumitkumar91.partykit.dev";
 
 function generateRoomId() {
   return Math.random().toString(36).slice(2, 8).toUpperCase();
