@@ -5,12 +5,48 @@ import WordleBoard from "./WordleBoard";
 import WordleKeyboard from "./WordleKeyboard";
 import { checkGuess, mergeLetterMap, TileState, LetterMap } from "./wordle";
 import { WORDLE_ANSWERS, WORDLE_VALID } from "@/lib/words";
+import WordleOnline from "./WordleOnline";
 
 function randomAnswer(): string {
   return WORDLE_ANSWERS[Math.floor(Math.random() * WORDLE_ANSWERS.length)];
 }
 
 export default function WordleGame() {
+  const [mode, setMode] = useState<"solo" | "online" | null>(null);
+
+  if (mode === null) {
+    return (
+      <div className="flex flex-col items-center justify-center flex-1 gap-6 px-4">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold mb-2">Wordle</h1>
+          <p className="text-zinc-400">Choose your mode</p>
+        </div>
+        <div className="flex flex-col gap-3 w-full max-w-xs">
+          <button
+            onClick={() => setMode("solo")}
+            className="px-6 py-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-lg transition-colors"
+          >
+            Solo
+            <span className="block text-sm font-normal text-emerald-200 mt-0.5">Guess the word in 6 tries</span>
+          </button>
+          <button
+            onClick={() => setMode("online")}
+            className="px-6 py-4 rounded-xl bg-blue-700 hover:bg-blue-600 text-white font-semibold text-lg transition-colors border border-blue-600"
+          >
+            Play Online
+            <span className="block text-sm font-normal text-blue-200 mt-0.5">Same word, race your opponent</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (mode === "online") return <WordleOnline onBack={() => setMode(null)} />;
+
+  return <WordleSolo />;
+}
+
+function WordleSolo() {
   const [answer, setAnswer] = useState(() => randomAnswer());
   const [guesses, setGuesses] = useState<string[]>([]);
   const [states, setStates] = useState<TileState[][]>([]);

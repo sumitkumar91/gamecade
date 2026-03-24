@@ -49,22 +49,38 @@ function whInitial(): WHState {
   return { grid: [], players: [], phase: "waiting", startedAt: null };
 }
 
+// ─── Wordle ──────────────────────────────────────────────────────────────────
+
+interface WLPlayer { id: string; guesses: number; won: boolean; done: boolean; }
+interface WLState {
+  wordSeed: number | null; // clients derive answer from seed
+  players: WLPlayer[];
+  phase: "waiting" | "playing" | "ended";
+}
+
+function wlInitial(): WLState {
+  return { wordSeed: null, players: [], phase: "waiting" };
+}
+
 // ─── Unified Server ──────────────────────────────────────────────────────────
 // Room ID prefix determines game type:
 //   "TTT-XXXXXX" → Tic Tac Toe
 //   "WH-XXXXXX"  → Word Hunt
+//   "WL-XXXXXX"  → Wordle
 
-type GameType = "ttt" | "wh" | "unknown";
+type GameType = "ttt" | "wh" | "wl" | "unknown";
 
 function gameType(roomId: string): GameType {
   if (roomId.startsWith("TTT-")) return "ttt";
   if (roomId.startsWith("WH-")) return "wh";
+  if (roomId.startsWith("WL-")) return "wl";
   return "unknown";
 }
 
 export default class GameServer implements Party.Server {
   ttt: TTTState = tttInitial();
   wh: WHState = whInitial();
+  wl: WLState = wlInitial();
 
   constructor(readonly room: Party.Room) {}
 
@@ -92,6 +108,17 @@ export default class GameServer implements Party.Server {
       }
       conn.send(JSON.stringify({ type: "state", state: this.wh }));
       this.broadcast({ type: "state", state: this.wh });
+
+    } else if (type === "wl") {
+      const { players } = this.wl;
+      if (!players.find((p) => p.id === conn.id) && players.length < 2)
+        players.push({ id: conn.id, guesses: 0, won: false, done: false });
+      if (players.length === 2 && this.wl.phase === "waiting") {
+        this.wl.wordSeed = Math.floor(Math.random() * 2309);
+        this.wl.phase = "playing";
+      }
+      conn.send(JSON.stringify({ type: "state", state: this.wl }));
+      this.broadcast({ type: "state", state: this.wl });
     }
   }
 
@@ -104,10 +131,13 @@ export default class GameServer implements Party.Server {
 
     } else if (type === "wh") {
       this.wh.players = this.wh.players.filter((p) => p.id !== conn.id);
-      if (this.wh.phase === "playing" && this.wh.players.length < 2) {
-        this.wh = whInitial();
-      }
+      if (this.wh.phase === "playing" && this.wh.players.length < 2) this.wh = whInitial();
       this.broadcast({ type: "state", state: this.wh });
+
+    } else if (type === "wl") {
+      this.wl.players = this.wl.players.filter((p) => p.id !== conn.id);
+      if (this.wl.phase === "playing" && this.wl.players.length < 2) this.wl = wlInitial();
+      this.broadcast({ type: "state", state: this.wl });
     }
   }
 
@@ -159,6 +189,24 @@ export default class GameServer implements Party.Server {
         this.wh.startedAt = Date.now();
         this.wh.phase = "playing";
         this.broadcast({ type: "state", state: this.wh });
+      }
+
+    } else if (type === "wl") {
+      // Client sends { type: "guessed", won: boolean } after each valid guess
+      if (msg.type === "guessed") {
+        const player = this.wl.players.find((p) => p.id === sender.id);
+        if (!player || player.done) return;
+        player.guesses += 1;
+        if (msg.won) { player.won = true; player.done = true; }
+        else if (player.guesses >= 6) player.done = true;
+        if (this.wl.players.every((p) => p.done)) this.wl.phase = "ended";
+        this.broadcast({ type: "state", state: this.wl });
+      }
+      if (msg.type === "rematch") {
+        this.wl.players.forEach((p) => { p.guesses = 0; p.won = false; p.done = false; });
+        this.wl.wordSeed = Math.floor(Math.random() * 2309);
+        this.wl.phase = "playing";
+        this.broadcast({ type: "state", state: this.wl });
       }
     }
   }
