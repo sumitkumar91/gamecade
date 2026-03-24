@@ -168,7 +168,7 @@ export default function WordHuntOnline({ onBack }: { onBack: () => void }) {
 
   function copyRoom() {
     if (!roomId) return;
-    navigator.clipboard.writeText(roomId);
+    navigator.clipboard.writeText(roomId?.split('-').slice(1).join('-') ?? '');
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   }
@@ -222,7 +222,7 @@ export default function WordHuntOnline({ onBack }: { onBack: () => void }) {
         <div className="w-8 h-8 border-2 border-zinc-600 border-t-violet-400 rounded-full animate-spin" />
         <p className="text-zinc-300 font-semibold">Waiting for opponent...</p>
         <div className="flex items-center gap-2">
-          <span className="font-mono text-zinc-400 tracking-widest">{roomId}</span>
+          <span className="font-mono text-zinc-400 tracking-widest">{roomId?.split("-").slice(1).join("-")}</span>
           <button onClick={copyRoom} className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors">
             {copied ? "Copied!" : "Copy"}
           </button>
@@ -279,7 +279,7 @@ export default function WordHuntOnline({ onBack }: { onBack: () => void }) {
       <div className="flex flex-col items-center gap-1 w-full">
         <h1 className="text-xl font-bold">Word Hunt — Online</h1>
         <div className="flex items-center gap-2">
-          <span className="text-xs text-zinc-500 font-mono">Room: {roomId}</span>
+          <span className="text-xs text-zinc-500 font-mono">Room: {roomId?.split("-").slice(1).join("-")}</span>
           <button onClick={copyRoom} className="text-xs text-zinc-600 hover:text-zinc-400">{copied ? "Copied!" : "Copy"}</button>
         </div>
         <div className="h-px w-full bg-zinc-800 mt-1" />

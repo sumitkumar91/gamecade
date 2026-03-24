@@ -93,7 +93,7 @@ export default function TicTacToeOnline({ onBack }: { onBack: () => void }) {
 
   function copyRoom() {
     if (!roomId) return;
-    navigator.clipboard.writeText(roomId);
+    navigator.clipboard.writeText(roomId?.split('-').slice(1).join('-') ?? '');
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   }
@@ -169,7 +169,7 @@ export default function TicTacToeOnline({ onBack }: { onBack: () => void }) {
       <div className="flex flex-col items-center gap-1 w-full">
         <h1 className="text-2xl font-bold">Tic Tac Toe — Online</h1>
         <div className="flex items-center gap-2">
-          <span className="text-sm text-zinc-500 font-mono">Room: {roomId}</span>
+          <span className="text-sm text-zinc-500 font-mono">Room: {roomId?.split("-").slice(1).join("-")}</span>
           <button onClick={copyRoom} className="text-xs text-zinc-400 hover:text-zinc-200 transition-colors">
             {copied ? "Copied!" : "Copy"}
           </button>
@@ -186,7 +186,7 @@ export default function TicTacToeOnline({ onBack }: { onBack: () => void }) {
         <div className="flex flex-col items-center gap-3 py-10">
           <div className="w-8 h-8 border-2 border-zinc-600 border-t-zinc-300 rounded-full animate-spin" />
           <p className="text-zinc-400 text-sm">Waiting for opponent...</p>
-          <p className="text-zinc-600 text-xs">Share room code: <span className="font-mono text-zinc-400">{roomId}</span></p>
+          <p className="text-zinc-600 text-xs">Share room code: <span className="font-mono text-zinc-400">{roomId?.split("-").slice(1).join("-")}</span></p>
         </div>
       ) : (
         <>

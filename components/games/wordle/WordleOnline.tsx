@@ -134,7 +134,7 @@ export default function WordleOnline({ onBack }: { onBack: () => void }) {
   }
   function copyRoom() {
     if (!roomId) return;
-    navigator.clipboard.writeText(roomId);
+    navigator.clipboard.writeText(roomId?.split('-').slice(1).join('-') ?? '');
     setCopied(true); setTimeout(() => setCopied(false), 1500);
   }
 
@@ -174,7 +174,7 @@ export default function WordleOnline({ onBack }: { onBack: () => void }) {
         <div className="w-8 h-8 border-2 border-zinc-600 border-t-emerald-400 rounded-full animate-spin" />
         <p className="text-zinc-300 font-semibold">Waiting for opponent...</p>
         <div className="flex items-center gap-2">
-          <span className="font-mono text-zinc-400 tracking-widest">{roomId}</span>
+          <span className="font-mono text-zinc-400 tracking-widest">{roomId?.split("-").slice(1).join("-")}</span>
           <button onClick={copyRoom} className="text-xs text-zinc-500 hover:text-zinc-300">{copied ? "Copied!" : "Copy"}</button>
         </div>
         <button onClick={onBack} className="text-sm text-zinc-600 hover:text-zinc-400 transition-colors mt-4">← Back</button>
@@ -225,7 +225,7 @@ export default function WordleOnline({ onBack }: { onBack: () => void }) {
           )}
         </div>
         <div className="flex items-center gap-2 mt-0.5">
-          <span className="font-mono text-zinc-600 text-xs">{roomId}</span>
+          <span className="font-mono text-zinc-600 text-xs">{roomId?.split("-").slice(1).join("-")}</span>
           <button onClick={copyRoom} className="text-xs text-zinc-600 hover:text-zinc-400">{copied ? "Copied!" : "Copy"}</button>
         </div>
         <div className="h-px w-full bg-zinc-800 mt-1" />
