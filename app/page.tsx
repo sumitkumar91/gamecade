@@ -19,6 +19,24 @@ const GAMES = [
     href: "/tictactoe",
     color: "bg-blue-500",
   },
+  {
+    title: "Memory Battle",
+    description: "Flip tiles to find matching pairs. Play solo or take turns against a friend online.",
+    href: "/memory",
+    color: "bg-pink-500",
+  },
+  {
+    title: "Reaction Duel",
+    description: "Tap the moment the screen flashes. Race a friend online or test your solo reflexes.",
+    href: "/reaction",
+    color: "bg-amber-500",
+  },
+  {
+    title: "Aim Trainer",
+    description: "Click targets as fast as you can before they vanish. Track accuracy, speed, and click heatmap.",
+    href: "/aim",
+    color: "bg-red-500",
+  },
 ];
 
 export default function Home() {

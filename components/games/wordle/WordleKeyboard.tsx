@@ -23,9 +23,9 @@ export default function WordleKeyboard({ letterMap, onKey }: KeyboardProps) {
   };
 
   return (
-    <div className="flex flex-col items-center gap-1.5 w-full px-1">
+    <div className="flex flex-col items-center gap-1.5">
       {ROWS.map((row, ri) => (
-        <div key={ri} className="flex gap-1 w-full justify-center">
+        <div key={ri} className="flex gap-1 justify-center">
           {row.map((key) => {
             const state = letterMap[key] ?? "empty";
             const color = colorMap[state];
@@ -35,7 +35,7 @@ export default function WordleKeyboard({ letterMap, onKey }: KeyboardProps) {
                 key={key}
                 onClick={() => onKey(key)}
                 className={`flex items-center justify-center rounded font-bold uppercase transition-colors active:scale-95 select-none
-                  ${wide ? "flex-[1.5] text-xs" : "flex-1"} h-14 min-w-0
+                  ${wide ? "w-14 text-xs" : "w-9"} h-14
                   ${color} border`}
               >
                 {key}

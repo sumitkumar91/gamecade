@@ -276,7 +276,7 @@ function WordHuntSolo({ onBack }: { onBack: () => void }) {
                 data-col={c}
                 onPointerDown={() => handlePointerDown(r, c)}
                 onPointerEnter={() => handlePointerEnter(r, c)}
-                className={`flex items-center justify-center w-16 h-16 rounded-xl text-xl font-bold uppercase
+                className={`flex items-center justify-center w-20 h-20 rounded-xl text-2xl font-bold uppercase
                   transition-all touch-none select-none
                   ${inPath
                     ? isLast
